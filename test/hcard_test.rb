@@ -27,6 +27,15 @@ context "A simple hcard definition" do
     HCard.find(:text => open(fixture(:fauxtank)).read).should.not.equal []
     HCard.find(:text => open(fixture(:fauxtank)).read).should.not.equal nil
   end
+
+  specify "should accept a :text option to :first" do
+    result = HCard.find(:first => {:text => open(fixture(:fauxtank)).read})
+    result.should.be.a.kind_of HCard
+  end
+
+  specify "should accept a :text option to :all" do
+    HCard.find(:all => {:text => open(fixture(:fauxtank)).read}).length.should == 1
+  end
 end
 
 context "The hCard found in the upcoming_single page" do

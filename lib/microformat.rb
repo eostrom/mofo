@@ -14,6 +14,9 @@ class Microformat
 
       target, @options = args
       @options ||= target.is_a?(Hash) ? target : {}
+      if @options[:first] && @options[:all]
+        raise ArgumentError, "Can't find both :first and :all"
+      end
       [:first, :all].each { |key| target = @options[key] if @options[key] }
 
       extract_base_url! target
@@ -279,7 +282,9 @@ class Microformat
           found || parse_element(element, klass)
         end 
       elsif target.is_a? Class
-        target.find(@options.merge(:first => element))
+        options = @options.merge(:first => element)
+        options.delete(:all)
+        target.find(options)
       else
         value = case element.name
         when 'abbr' then element['title']
